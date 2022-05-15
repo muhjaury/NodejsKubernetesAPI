@@ -10,17 +10,18 @@ function verifyToken(roles) {
       const token = req.header("key");
       const username = req.header("username");
       const user = await User.findOne({ username: username });
-      if (!user)
-        return res.status(400).json({
-          status: res.statusCode,
-          message: "Wrong Username",
-        });
 
       //Checking Username
       if (!username)
         return res.status(400).json({
           status: res.statusCode,
           message: "Username Empty",
+        });
+
+      if (!user)
+        return res.status(400).json({
+          status: res.statusCode,
+          message: "Wrong Username",
         });
 
       if (roles) {

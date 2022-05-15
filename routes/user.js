@@ -117,7 +117,7 @@ router.post("/generate", verifyRefreshToken(), async (req, res) => {
   const username = req.header("username");
   //JWT
   const token = jwt.sign({ username: username }, process.env.KEY, {
-    expiresIn: "30s",
+    expiresIn: "59s",
   });
   res.json({ token: token });
 });

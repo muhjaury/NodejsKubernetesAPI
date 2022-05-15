@@ -17,11 +17,18 @@ function verifyRefreshToken() {
           message: "Username Empty",
         });
 
+      const user = await User.findOne({ username: username });
+      if (!user)
+        return res.status(400).json({
+          status: res.statusCode,
+          message: "Wrong Username",
+        });
+
       //Checking Token
       if (!refreshToken)
         return res.status(400).json({
           status: res.statusCode,
-          message: "Key Empty",
+          message: "Refresh Key Empty",
         });
 
       try {

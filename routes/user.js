@@ -56,27 +56,59 @@ router.get("/read", verifyToken(), async (req, res) => {
 //Update
 router.patch("/update/:id", verifyToken(role[0]), async (req, res) => {
   try {
-    const book = await User.updateOne(
+    const checkingUser = await User.findOne({ _id: req.params.id });
+    if (!checkingUser)
+      return res.status(400).json({
+        status: res.statusCode,
+        message: "ID Doesn't Exist",
+      });
+    const salt = await bcrypt.genSalt(5);
+    const password = await bcrypt.hash(req.body.password, salt);
+    if (!req.body.username)
+      return res.status(400).json({
+        status: res.statusCode,
+        message: "Please enter New Username",
+      });
+    if (!req.body.password)
+      return res.status(400).json({
+        status: res.statusCode,
+        message: "Please enter New Password",
+      });
+    await User.updateOne(
       { _id: req.params.id },
       {
         username: req.body.username,
-        password: req.body.password,
-        role: req.body.role,
+        password: password,
       }
     );
-    res.json(book);
+    res.json({
+      statusCode: 200,
+      message: "Update Success",
+      "New Username": req.body.username,
+      "New Password": req.body.password,
+      "Encrypted Password": password,
+    });
   } catch (err) {
-    res.json({ message: err });
+    res.json({ statusCode: 400, message: "Invalid Id" });
   }
 });
 
 //Delete
 router.delete("/delete/:id", verifyToken(role[0]), async (req, res) => {
   try {
-    const book = await User.deleteOne({ _id: req.params.id });
-    res.json(book);
+    const checkingUser = await User.findOne({ _id: req.params.id });
+    if (!checkingUser)
+      return res.status(400).json({
+        status: res.statusCode,
+        message: "ID Doesn't Exist",
+      });
+    await User.deleteOne({ _id: req.params.id });
+    res.json({
+      statusCode: 200,
+      message: "Delete Success",
+    });
   } catch (err) {
-    res.json({ message: err });
+    res.json({ statusCode: 400, message: "Invalid Id" });
   }
 });
 

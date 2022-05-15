@@ -9,6 +9,12 @@ function verifyToken(roles) {
       //Header
       const token = req.header("key");
       const username = req.header("username");
+      const user = await User.findOne({ username: username });
+      if (!user)
+        return res.status(400).json({
+          status: res.statusCode,
+          message: "Wrong Username",
+        });
 
       //Checking Username
       if (!username)
@@ -17,18 +23,9 @@ function verifyToken(roles) {
           message: "Username Empty",
         });
 
-      //Checking Token
-      if (!token)
-        return res.status(400).json({
-          status: res.statusCode,
-          message: "Key Empty",
-        });
-
-      //Checking Roles
       if (roles) {
-        const user = await User.findOne({ username: username, role: roles });
-        console.log(user);
-        if (!user)
+        console.log(user.role == roles);
+        if (!(user.role == roles))
           return res.status(400).json({
             status: res.statusCode,
             message: "Unauthorized",
@@ -36,8 +33,15 @@ function verifyToken(roles) {
       }
 
       try {
-        const verified = jwt.verify(token, process.env.KEY);
-        req.user = verified;
+        if (user.role == "User") {
+          if (!token)
+            return res.status(400).json({
+              status: res.statusCode,
+              message: "Key Empty",
+            });
+          const verified = jwt.verify(token, process.env.KEY);
+          req.user = verified;
+        }
         next();
       } catch (err) {
         res.status(400).json({

@@ -25,9 +25,9 @@ router.post("/login", async (req, res) => {
   //res.send("Username and Password is correct");
 
   //JWT
-  if (!user.role == "Admin") {
+  if (user.role == "User") {
     const token = jwt.sign({ username: user.username }, process.env.KEY, {
-      expiresIn: "30s",
+      expiresIn: "59s",
     });
     const refreshToken = jwt.sign(
       { username: user.username },

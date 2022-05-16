@@ -58,7 +58,7 @@ router.patch("/update/:id", verifyToken(role[0]), async (req, res) => {
   try {
     const checkingUser = await User.findOne({ _id: req.params.id });
     if (!checkingUser)
-      return res.status(400).json({
+      return res.status(401).json({
         status: res.statusCode,
         message: "ID Doesn't Exist",
       });
@@ -89,7 +89,7 @@ router.patch("/update/:id", verifyToken(role[0]), async (req, res) => {
       "Encrypted Password": password,
     });
   } catch (err) {
-    res.json({ statusCode: 400, message: "Invalid Id" });
+    res.json({ statusCode: 401, message: "Invalid Id" });
   }
 });
 
@@ -98,7 +98,7 @@ router.delete("/delete/:id", verifyToken(role[0]), async (req, res) => {
   try {
     const checkingUser = await User.findOne({ _id: req.params.id });
     if (!checkingUser)
-      return res.status(400).json({
+      return res.status(401).json({
         status: res.statusCode,
         message: "ID Doesn't Exist",
       });
@@ -108,7 +108,7 @@ router.delete("/delete/:id", verifyToken(role[0]), async (req, res) => {
       message: "Delete Success",
     });
   } catch (err) {
-    res.json({ statusCode: 400, message: "Invalid Id" });
+    res.json({ statusCode: 401, message: "Invalid Id" });
   }
 });
 

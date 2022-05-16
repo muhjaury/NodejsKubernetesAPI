@@ -12,21 +12,21 @@ function verifyRefreshToken() {
 
       //Checking Username
       if (!username)
-        return res.status(400).json({
+        return res.status(417).json({
           status: res.statusCode,
           message: "Username Empty",
         });
 
       const user = await User.findOne({ username: username });
       if (!user)
-        return res.status(400).json({
+        return res.status(401).json({
           status: res.statusCode,
           message: "Wrong Username",
         });
 
       //Checking Token
       if (!refreshToken)
-        return res.status(400).json({
+        return res.status(401).json({
           status: res.statusCode,
           message: "Refresh Key Empty",
         });
@@ -36,7 +36,7 @@ function verifyRefreshToken() {
         req.user = verified;
         next();
       } catch (err) {
-        res.status(400).json({
+        res.status(401).json({
           status: res.statusCode,
           message: "Invalid Refresh Token",
         });

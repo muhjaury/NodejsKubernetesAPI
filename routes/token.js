@@ -13,13 +13,13 @@ function verifyToken(roles) {
 
       //Checking Username
       if (!username)
-        return res.status(400).json({
+        return res.status(417).json({
           status: res.statusCode,
           message: "Username Empty",
         });
 
       if (!user)
-        return res.status(400).json({
+        return res.status(401).json({
           status: res.statusCode,
           message: "Wrong Username",
         });
@@ -27,7 +27,7 @@ function verifyToken(roles) {
       if (roles) {
         console.log(user.role == roles);
         if (!(user.role == roles))
-          return res.status(400).json({
+          return res.status(401).json({
             status: res.statusCode,
             message: "Unauthorized",
           });
@@ -36,7 +36,7 @@ function verifyToken(roles) {
       try {
         if (user.role == "User") {
           if (!token)
-            return res.status(400).json({
+            return res.status(417).json({
               status: res.statusCode,
               message: "Key Empty",
             });
@@ -45,7 +45,7 @@ function verifyToken(roles) {
         }
         next();
       } catch (err) {
-        res.status(400).json({
+        res.status(401).json({
           status: res.statusCode,
           message: "Invalid Token",
         });
